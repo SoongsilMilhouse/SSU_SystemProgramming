@@ -1,5 +1,5 @@
 /*
-* my_assembler ÇÔ¼ö¸¦ À§ÇÑ º¯¼ö ¼±¾ğ ¹× ¸ÅÅ©·Î¸¦ ´ã°í ÀÖ´Â Çì´õ ÆÄÀÏÀÌ´Ù.
+* my_assembler í•¨ìˆ˜ë¥¼ ìœ„í•œ ë³€ìˆ˜ ì„ ì–¸ ë° ë§¤í¬ë¡œë¥¼ ë‹´ê³  ìˆëŠ” í—¤ë” íŒŒì¼ì´ë‹¤.
 *
 */
 #pragma warning(disable:4996)
@@ -10,39 +10,39 @@
 #define MAX_OPERAND 3
 
 /*
-* instruction ¸ñ·Ï ÆÄÀÏ·Î ºÎÅÍ Á¤º¸¸¦ ¹Ş¾Æ¿Í¼­ »ı¼ºÇÏ´Â ±¸Á¶Ã¼ º¯¼öÀÌ´Ù.
-* ±¸Á¶´Â °¢ÀÚÀÇ instruction setÀÇ ¾ç½Ä¿¡ ¸ÂÃç Á÷Á¢ ±¸ÇöÇÏµÇ
-* ¶óÀÎ º°·Î ÇÏ³ªÀÇ instructionÀ» ÀúÀåÇÑ´Ù.
+* instruction ëª©ë¡ íŒŒì¼ë¡œ ë¶€í„° ì •ë³´ë¥¼ ë°›ì•„ì™€ì„œ ìƒì„±í•˜ëŠ” êµ¬ì¡°ì²´ ë³€ìˆ˜ì´ë‹¤.
+* êµ¬ì¡°ëŠ” ê°ìì˜ instruction setì˜ ì–‘ì‹ì— ë§ì¶° ì§ì ‘ êµ¬í˜„í•˜ë˜
+* ë¼ì¸ ë³„ë¡œ í•˜ë‚˜ì˜ instructionì„ ì €ì¥í•œë‹¤.
 */
 struct inst_unit {
-	char *inst_name;			//¸í·É¾î ÀÌ¸§
-	int format;					//Çü½Ä
+	char *inst_name;			//ëª…ë ¹ì–´ ì´ë¦„
+	int format;					//í˜•ì‹
 	char opcode[2];				//Opcode
-	int operand_count;			//»ç¿ëÇÏ´Â operand °³¼ö
+	int operand_count;			//ì‚¬ìš©í•˜ëŠ” operand ê°œìˆ˜
 };
 typedef struct inst_unit inst;
 inst *inst_table[MAX_INST];
-int inst_count;					//inst_table¿¡ µé¾îÀÖ´Â instructionÀÇ °³¼ö¸¦ ÀúÀåÇÑ´Ù.(inst_index > inst_count·Î ¼öÁ¤)
+int inst_count;					//inst_tableì— ë“¤ì–´ìˆëŠ” instructionì˜ ê°œìˆ˜ë¥¼ ì €ì¥í•œë‹¤.(inst_index > inst_countë¡œ ìˆ˜ì •)
 
-								/*
-								* ¾î¼Àºí¸® ÇÒ ¼Ò½ºÄÚµå¸¦ ÀÔ·Â¹Ş´Â Å×ÀÌºíÀÌ´Ù. ¶óÀÎ ´ÜÀ§·Î °ü¸®ÇÒ ¼ö ÀÖ´Ù.
-								*/
+/*
+* ì–´ì…ˆë¸”ë¦¬ í•  ì†ŒìŠ¤ì½”ë“œë¥¼ ì…ë ¥ë°›ëŠ” í…Œì´ë¸”ì´ë‹¤. ë¼ì¸ ë‹¨ìœ„ë¡œ ê´€ë¦¬í•  ìˆ˜ ìˆë‹¤.
+*/
 char *input_data[MAX_LINES];
 static int line_num;
 
 int label_num;
 
 /*
-* ¾î¼Àºí¸® ÇÒ ¼Ò½ºÄÚµå¸¦ ÅäÅ«´ÜÀ§·Î °ü¸®ÇÏ±â À§ÇÑ ±¸Á¶Ã¼ º¯¼öÀÌ´Ù.
-* operator´Â renamingÀ» Çã¿ëÇÑ´Ù.
-* nixbpe´Â 8bit Áß ÇÏÀ§ 6°³ÀÇ bit¸¦ ÀÌ¿ëÇÏ¿© n,i,x,b,p,e¸¦ Ç¥½ÃÇÑ´Ù.
+* ì–´ì…ˆë¸”ë¦¬ í•  ì†ŒìŠ¤ì½”ë“œë¥¼ í† í°ë‹¨ìœ„ë¡œ ê´€ë¦¬í•˜ê¸° ìœ„í•œ êµ¬ì¡°ì²´ ë³€ìˆ˜ì´ë‹¤.
+* operatorëŠ” renamingì„ í—ˆìš©í•œë‹¤.
+* nixbpeëŠ” 8bit ì¤‘ í•˜ìœ„ 6ê°œì˜ bitë¥¼ ì´ìš©í•˜ì—¬ n,i,x,b,p,eë¥¼ í‘œì‹œí•œë‹¤.
 */
 struct token_unit {
 	char *label;
 	char *instruction;
 	char *operand[MAX_OPERAND];
 	char *comment;
-	//char nixbpe; // ÃßÈÄ ÇÁ·ÎÁ§Æ®¿¡¼­ »ç¿ëµÈ´Ù.
+	//char nixbpe; // ì¶”í›„ í”„ë¡œì íŠ¸ì—ì„œ ì‚¬ìš©ëœë‹¤.
 
 };
 
@@ -51,8 +51,8 @@ token *token_table[MAX_LINES];
 static int token_line;
 
 /*
-* ½Éº¼À» °ü¸®ÇÏ´Â ±¸Á¶Ã¼ÀÌ´Ù.
-* ½Éº¼ Å×ÀÌºíÀº ½Éº¼ ÀÌ¸§, ½Éº¼ÀÇ À§Ä¡·Î ±¸¼ºµÈ´Ù.
+* ì‹¬ë³¼ì„ ê´€ë¦¬í•˜ëŠ” êµ¬ì¡°ì²´ì´ë‹¤.
+* ì‹¬ë³¼ í…Œì´ë¸”ì€ ì‹¬ë³¼ ì´ë¦„, ì‹¬ë³¼ì˜ ìœ„ì¹˜ë¡œ êµ¬ì„±ëœë‹¤.
 */
 struct symbol_unit {
 	char symbol[10];
@@ -74,9 +74,9 @@ int token_parsing(char *str);
 int search_opcode(char *str);
 static int assem_pass1(void);
 void make_opcode_output(char *file_name);
-//¸Ş¸ğ¸® ÇØÁ¦¸¦ À§ÇÑ ÇÔ¼ö
+//ë©”ëª¨ë¦¬ í•´ì œë¥¼ ìœ„í•œ í•¨ìˆ˜
 void free_memory(void);
 
-/* ÃßÈÄ ÇÁ·ÎÁ§Æ®¿¡¼­ »ç¿ëÇÏ°Ô µÇ´Â ÇÔ¼ö*/
+/* ì¶”í›„ í”„ë¡œì íŠ¸ì—ì„œ ì‚¬ìš©í•˜ê²Œ ë˜ëŠ” í•¨ìˆ˜*/
 static int assem_pass2(void);
 void make_objectcode_output(char *file_name);

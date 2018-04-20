@@ -74,7 +74,6 @@ int init_my_assembler(void)
 	int result;
 
 	if ((result = init_inst_file("inst.data")) < 0) {
-		getchar();
 		return -1;
 
 	}

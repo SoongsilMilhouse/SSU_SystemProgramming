@@ -361,6 +361,7 @@ int search_opcode(char *str)
 	int errno = -1, i = 0, is_plus = 0, str_len = strlen(str);
 	char* tmp_str = str;
 	char  plus[] = "+";
+	
 
 	//instruction의 첫 문자가 '+'일 경우 tmp_str++을 통해 '+'다음 문자열을 가리키도록 한다.
 	//str_len을 1 감소함으로써 문자열의 비교가 가능하게 한다.
@@ -399,15 +400,17 @@ int search_opcode(char *str)
 */
 static int assem_pass1(void)
 {
-	int errno = -1, i = 0;
+	int errno = -1;
 
 	/*
 	* input_data의 문자열을 한줄씩 입력 받아서
 	* token_parsing()을 호출하여 token_unit에 저장
 	*/
-	for (i = 0; i < line_num; i++) {
-		token_parsing(input_data[i]);
+	for (int i = 0; i < line_num; i++) {
+		errno = token_parsing(input_data[i]);
 	}
+
+	return errno;
 }
 
 

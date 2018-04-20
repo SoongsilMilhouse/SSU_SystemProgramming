@@ -73,12 +73,12 @@ int init_my_assembler(void)
 {
 	int result;
 
-	if ((result = init_inst_file("inst.data")) < 0) {
+	if ((result = init_inst_file("inst.data")) < 0) 
 		return -1;
 
-	}
 	if ((result = init_input_file("input.txt")) < 0)
 		return -1;
+	
 	return result;
 }
 

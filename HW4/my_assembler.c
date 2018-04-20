@@ -149,20 +149,20 @@ int init_inst_file(char *inst_file)
 
 			if (token_cnt == 4) break;
 			switch (token_cnt) {
-				//inst_name을 inst_table[i]->inst_name에 저장한다.
+			//inst_name을 inst_table[i]->inst_name에 저장한다.
 			case 0:
 				inst_table[i]->inst_name = (char *)malloc(sizeof(char) * token_len);
 				strncpy(inst_table[i]->inst_name, tmp_token, token_len);
 				break;
-				//format을 inst_table[i]->format에 저장한다.
+			//format을 inst_table[i]->format에 저장한다.
 			case 1:
 				inst_table[i]->format = atoi(tmp_token);
 				break;
-				//opcode을 inst_table[i]->opcode에 저장한다.
+			//opcode을 inst_table[i]->opcode에 저장한다.
 			case 2:
 				strncpy(inst_table[i]->opcode, tmp_token, token_len);
 				break;
-				//operand_count을 inst_table[i]->operand_count에 저장한다.
+			//operand_count을 inst_table[i]->operand_count에 저장한다.
 			case 3:
 				inst_table[i]->operand_count = atoi(tmp_token);
 				break;

@@ -301,13 +301,13 @@ int token_parsing(char *str)
 				strncpy(token_table[i]->label, tmp_token, token_len);
 				break;
 			}
-			//읽어들인 것이 명령어인 경우
+		//읽어들인 것이 명령어인 경우
 		case 1:
 			token_table[i]->instruction = (char *)malloc(sizeof(char) * token_len);
 			memset(token_table[i]->instruction, '\0', token_len);
 			strncpy(token_table[i]->instruction, tmp_token, token_len);
 			break;
-			//읽어들인 것이 Operand인 경우
+		//읽어들인 것이 Operand인 경우
 		case 2:
 			//orgin_tmp에 tmp_token의 내용을 복사한다.(Operand의 ','(comma)를 구분하기 위해 사용한다.)
 			origin_tmp_len = strlen(tmp_token);
@@ -333,12 +333,14 @@ int token_parsing(char *str)
 			}
 			break;
 		}
+		
 		tmp_token = strtok(NULL, delim);
 		token_cnt++;
 	}
 
 	i++;
 	token_line++;
+	
 	//input_data를 유지하기 위해 원래 str을 기억했다가 다시 복사해준다.
 	strcpy(str, origin_str);
 	return errno;

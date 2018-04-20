@@ -358,7 +358,7 @@ int token_parsing(char *str)
 int search_opcode(char *str)
 {
 	//파라미터로 전달된 문자열의 길이를 str_len에 저장한다.
-	int i = 0, is_plus = 0, str_len = strlen(str);
+	int errno = -1, i = 0, is_plus = 0, str_len = strlen(str);
 	char* tmp_str = str;
 	char  plus[] = "+";
 
@@ -381,7 +381,7 @@ int search_opcode(char *str)
 		}
 	}
 	//파라미터로 전달된 문자열과 매칭되는 명령어가 없다면 -1을 리턴한다.
-	return -1;
+	return errno;
 }
 
 /* ----------------------------------------------------------------------------------
@@ -399,7 +399,7 @@ int search_opcode(char *str)
 */
 static int assem_pass1(void)
 {
-	int i = 0;
+	int errno = -1, i = 0;
 
 	/*
 	* input_data의 문자열을 한줄씩 입력 받아서

@@ -497,18 +497,18 @@ void free_memory(void)
 
 	//token_table배열의 메모리를 각각 해제한다.
 	for (int i = 0; i < token_line; i++) {
-		if (strcmp(token_table[i]->label, "\0"))
+		if (strcmp(token_table[i]->label, ""))
 			free(token_table[i]->label);
 
-		if (strcmp(token_table[i]->instruction, "\0"))
+		if (strcmp(token_table[i]->instruction, ""))
 			free(token_table[i]->instruction);
 
 		for (int j = 0; j < 3; j++) {
-			if (strcmp(token_table[i]->operand[j], "\0"))
+			if (strcmp(token_table[i]->operand[j], ""))
 				free(token_table[i]->operand[j]);
 		}
 
-		if (strcmp(token_table[i]->comment, "\0"))
+		if (strcmp(token_table[i]->comment, ""))
 			free(token_table[i]->comment);
 
 		free(token_table[i]);

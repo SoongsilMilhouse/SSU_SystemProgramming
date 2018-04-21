@@ -280,11 +280,27 @@ int token_parsing(char *str)
 		if (token_cnt == 3) break;
 		switch (token_cnt) {
 		case 0:
-		//처음 읽어들인 것이 label인 경우 
-			token_table[i]->label = (char *)malloc(sizeof(char) * token_len);
-			memset(token_table[i]->label, '\0', token_len);
-			strncpy(token_table[i]->label, tmp_token, token_len);
-			break;
+		//처음 읽어들인 것이 label이 아닌 경우, search_opcode 함수를 사용해서 명령어인 것을 확인한 뒤 token을 저장한다.
+			if ((search_opcode(tmp_token)) != -1) {
+				//label 초기화
+				token_table[i]->label = (char *)malloc(sizeof(char) * token_len);
+				memset(token_table[i]->label, '\0', token_len);
+
+				//instruction 복사
+				token_table[i]->instruction = (char *)malloc(sizeof(char) * token_len);
+				memset(token_table[i]->instruction, '\0', token_len);
+				strncpy(token_table[i]->instruction, tmp_token, token_len);
+
+				token_cnt++;
+				break;
+			}
+			//처음 읽어들인 것이 label인 경우 
+			else {
+				token_table[i]->label = (char *)malloc(sizeof(char) * token_len);
+				memset(token_table[i]->label, '\0', token_len);
+				strncpy(token_table[i]->label, tmp_token, token_len);
+				break;
+			}
 		//읽어들인 것이 명령어인 경우
 		case 1:
 			token_table[i]->instruction = (char *)malloc(sizeof(char) * token_len);

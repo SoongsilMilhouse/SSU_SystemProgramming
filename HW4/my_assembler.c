@@ -25,7 +25,7 @@
 * 매계 : 실행 파일, 어셈블리 파일
 * 반환 : 성공 = 0, 실패 = < 0
 * 주의 : 현재 어셈블리 프로그램의 리스트 파일을 생성하는 루틴은 만들지 않았다.
-*		   또한 중간파일을 생성하지 않는다.
+* 	또한 중간파일을 생성하지 않는다.
 * ----------------------------------------------------------------------------------
 */
 int main(int args, char *arg[])
@@ -65,21 +65,20 @@ int main(int args, char *arg[])
 * 매계 : 없음
 * 반환 : 정상종료 = 0 , 에러 발생 = -1
 * 주의 : 각각의 명령어 테이블을 내부에 선언하지 않고 관리를 용이하게 하기
-*		   위해서 파일 단위로 관리하여 프로그램 초기화를 통해 정보를 읽어 올 수 있도록
-*		   구현하였다.
+* 위해서 파일 단위로 관리하여 프로그램 초기화를 통해 정보를 읽어 올 수 있도록
+* 구현하였다.
 * ----------------------------------------------------------------------------------
 */
 int init_my_assembler(void)
 {
 	int result;
 
-	if ((result = init_inst_file("inst.data")) < 0) {
-		getchar();
+	if ((result = init_inst_file("inst.data")) < 0) 
 		return -1;
 
-	}
 	if ((result = init_input_file("input.txt")) < 0)
 		return -1;
+	
 	return result;
 }
 
@@ -100,7 +99,7 @@ int init_my_assembler(void)
 *			함수명 | Format | Opcode | 오퍼랜드 갯수
 *			  ADD  |   3    |   18   |       1
 *
-*	Format을 3/4로 작성하지 않은 이유는 다음과 같습니다. 추후 +JSUB과 같은 4형식의 함수가 나올 시
+* Format을 3/4로 작성하지 않은 이유는 다음과 같습니다. 추후 +JSUB과 같은 4형식의 함수가 나올 시
 * '+' 문자를 체크한 다음 Format안에 있는 숫자를 +1 해주려는 목적입니다.
 */
 int init_inst_file(char *inst_file)
@@ -150,20 +149,20 @@ int init_inst_file(char *inst_file)
 
 			if (token_cnt == 4) break;
 			switch (token_cnt) {
-				//inst_name을 inst_table[i]->inst_name에 저장한다.
+			//inst_name을 inst_table[i]->inst_name에 저장한다.
 			case 0:
 				inst_table[i]->inst_name = (char *)malloc(sizeof(char) * token_len);
 				strncpy(inst_table[i]->inst_name, tmp_token, token_len);
 				break;
-				//format을 inst_table[i]->format에 저장한다.
+			//format을 inst_table[i]->format에 저장한다.
 			case 1:
 				inst_table[i]->format = atoi(tmp_token);
 				break;
-				//opcode을 inst_table[i]->opcode에 저장한다.
+			//opcode을 inst_table[i]->opcode에 저장한다.
 			case 2:
 				strncpy(inst_table[i]->opcode, tmp_token, token_len);
 				break;
-				//operand_count을 inst_table[i]->operand_count에 저장한다.
+			//operand_count을 inst_table[i]->operand_count에 저장한다.
 			case 3:
 				inst_table[i]->operand_count = atoi(tmp_token);
 				break;
@@ -281,7 +280,7 @@ int token_parsing(char *str)
 		if (token_cnt == 3) break;
 		switch (token_cnt) {
 		case 0:
-			//처음 읽어들인 것이 label이 아닌 경우, search_opcode 함수를 사용해서 명령어인 것을 확인한 뒤 token을 저장한다.
+		//처음 읽어들인 것이 label이 아닌 경우, search_opcode 함수를 사용해서 명령어인 것을 확인한 뒤 token을 저장한다.
 			if ((search_opcode(tmp_token)) != -1) {
 				//label 초기화
 				token_table[i]->label = (char *)malloc(sizeof(char) * token_len);
@@ -291,6 +290,7 @@ int token_parsing(char *str)
 				token_table[i]->instruction = (char *)malloc(sizeof(char) * token_len);
 				memset(token_table[i]->instruction, '\0', token_len);
 				strncpy(token_table[i]->instruction, tmp_token, token_len);
+
 				token_cnt++;
 				break;
 			}
@@ -351,7 +351,6 @@ int token_parsing(char *str)
 * 설명 : 입력 문자열이 기계어 코드인지를 검사하는 함수이다.
 * 매계 : 토큰 단위로 구분된 문자열
 * 반환 : 정상종료 = 기계어 테이블 인덱스, 에러 < 0
-* 주의 :
 *
 * ----------------------------------------------------------------------------------
 */
@@ -499,18 +498,18 @@ void free_memory(void)
 
 	//token_table배열의 메모리를 각각 해제한다.
 	for (int i = 0; i < token_line; i++) {
-		if (strcmp(token_table[i]->label, "\0"))
+		if (strcmp(token_table[i]->label, ""))
 			free(token_table[i]->label);
 
-		if (strcmp(token_table[i]->instruction, "\0"))
+		if (strcmp(token_table[i]->instruction, ""))
 			free(token_table[i]->instruction);
 
 		for (int j = 0; j < 3; j++) {
-			if (strcmp(token_table[i]->operand[j], "\0"))
+			if (strcmp(token_table[i]->operand[j], ""))
 				free(token_table[i]->operand[j]);
 		}
 
-		if (strcmp(token_table[i]->comment, "\0"))
+		if (strcmp(token_table[i]->comment, ""))
 			free(token_table[i]->comment);
 
 		free(token_table[i]);

@@ -188,7 +188,7 @@ int token_parsing(char *str)
 	else {
 		token_table[token_line] = (token*)malloc(sizeof(token));
 		
-		//label, instruction, operand, comment > NULL 초기화
+		//label, instruction, operand, comment -> NULL 초기화
 		token_table[token_line]->label = NULL;
 		token_table[token_line]->instruction = NULL;
 		for (i = 0; i < MAX_OPERAND; i++) 

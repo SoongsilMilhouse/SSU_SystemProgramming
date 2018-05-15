@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-
 /**
  * Assembler : 
  * 이 프로그램은 SIC/XE 머신을 위한 Assembler 프로그램의 메인 루틴이다.
@@ -89,24 +88,19 @@ public class Assembler {
 	 */
 	private void printObjectCode(String fileName) {
 		try {
-			PrintWriter out = new PrintWriter(new FileWriter(fileName));
+			PrintWriter out = new PrintWriter(new BufferedWriter (new FileWriter(fileName)));
 		
 			Iterator<ObjectProgTable> itr = ObjectProgList.iterator();
 			while ( itr.hasNext() ) {
 				ObjectProgTable objtable = itr.next();
-				out.printf("%s", objtable.header);
-				out.println();
+				out.printf("%s\r\n", objtable.header);
 				if ( objtable.extdef.equals("D") == false) {
-					out.printf("%s", objtable.extdef);
-					out.println();
+					out.printf("%s\r\n", objtable.extdef);
 				}
-				out.printf("%s", objtable.extref);
-				out.println();
-				out.printf("%s", objtable.text);
-				out.println();
+				out.printf("%s\r\n", objtable.extref);
+				out.printf("%s\r\n", objtable.text);
 				out.printf("%s", objtable.modification);
-				out.printf("%s", objtable.end);
-				out.println();
+				out.printf("%s\r\n", objtable.end);
 			}
 			out.close();
 		} catch (IOException e) {
@@ -121,8 +115,8 @@ public class Assembler {
 	private void printSymbolTable(String fileName) {
 		try {
 			PrintWriter out = new PrintWriter(new BufferedWriter (new FileWriter(fileName)));
-			Iterator<SymbolTable> itr = symtabList.iterator();
 			
+			Iterator<SymbolTable> itr = symtabList.iterator();
 			while ( itr.hasNext() ) {
 				SymbolTable symtable = itr.next();
 				for ( Map.Entry<String, Integer> entry : symtable.symbolHashMap.entrySet() ) {
@@ -139,15 +133,7 @@ public class Assembler {
 	}
 	
 	
-	/**
-	 * 10진수를 16진수로 변환하고 그 값을 리턴한다.
-	 * @param value : 16진수로 바꾸고자 하는 10진수
-	 * @return Integer.toHexString(value).toUpperCase() : 16진수로 변경된 값
-	 */
-	public static String decToHex(int value)
-	 {
-		return Integer.toHexString(value).toUpperCase();
-	 }
+
 	
 	
 	/** 
@@ -245,7 +231,6 @@ public class Assembler {
 				}
 			} /** End of "if ( token.operator.equals("END") == false)" */
 		} /** End of for */
-		
 		/** save last program length  */
 		if ( literalList.get(section).getLiteral(0).name.charAt(1) == 'C' ) {
 			progLengthList.add(locctr);
@@ -253,7 +238,6 @@ public class Assembler {
 		else if ( literalList.get(section).getLiteral(0).name.charAt(1) == 'X' ) {
 			progLengthList.add(locctr+1);
 		}
-		
 		/** modify literal(=X'05') address */
 		literalList.get(section).getLiteral(literalIndex).modifyAddress(locctr);
 	}
@@ -310,18 +294,8 @@ public class Assembler {
 					/** format 1 */
 					if ( instTable.getFormat(token.operator) == 1 ) {
 						String opcode = instTable.getOpcode(token.operator);
-
-						if ( 'A' <= opcode.charAt(0) && opcode.charAt(0) <= 'Z' )
-							tmp = opcode.charAt(0) - ('0' + 7) << 4;
-						else 
-							tmp = (opcode.charAt(0) - '0') << 4;
-						  
-						if ( 'A' <= opcode.charAt(1) && opcode.charAt(0) <= 'Z' )
-							tmp += opcode.charAt(1) - ('0' + 7);
-						else
-							tmp += opcode.charAt(1) - '0';
-						
-						format = tmp;
+						/** save opcode */
+						format = calculateOpcode(opcode);
 						objectCode += Integer.toHexString(format);			
 						codeList.get(section).putOpjectCode(objectCode);
 					}
@@ -340,28 +314,14 @@ public class Assembler {
 					/** format 3 */
 					else if ( instTable.getFormat(token.operator) == 3 ) {
 						String opcode = instTable.getOpcode(token.operator);
-						
-						if ( 'A' <= opcode.charAt(0) && opcode.charAt(0) <= 'Z' ) 
-							tmp = opcode.charAt(0) - ('0' + 7) << 4;
-						else 
-							tmp = (opcode.charAt(0) - '0') << 4;
-						
-						if ( 'A' <= opcode.charAt(1) && opcode.charAt(0) <= 'Z' ) 
-							tmp += opcode.charAt(1) - ('0' + 7);
-						else 
-							tmp += (opcode.charAt(1) - '0');
-						/** 
-						 * save opcode
-						 */
-						format = format | (tmp << 16);
+						/** save opcode */
+						format = format | (calculateOpcode(opcode) << 16);
 						
 						/** RSUB */
 						if ( token.operator.equals("RSUB") ) {
 							token.setFlag(TokenTable.nFlag, 1);
 							token.setFlag(TokenTable.iFlag, 1);
-							/**
-							 * set nixbpe
-							 */
+							/** set nixbpe */
 							format = format | (token.nixbpe << 12);
 							
 							objectCode = Integer.toHexString(format).toUpperCase();
@@ -394,9 +354,7 @@ public class Assembler {
 						if ( token.operand[0].charAt(0) != '#' ) 
 							token.setFlag(TokenTable.pFlag, 1);
 
-						/** 
-						 * save nixbpe
-						 */
+						/** set nixbpe */
 						format = format | (token.nixbpe << 12);
 						
 						/** if there is a symbol in OPERAND field then */
@@ -412,9 +370,7 @@ public class Assembler {
 							pc = token.location + instTable.getFormat(token.operator);
 						}
 					
-						/**
-						 * save displacement
-						 */
+						/** set displacement */
 						format = format | ((ta - pc) & 0x00000FFF);
 						objectCode = Integer.toHexString(format).toUpperCase();	
 						if ( objectCode.length() < 6 )
@@ -424,20 +380,7 @@ public class Assembler {
 					}
 					else if ( instTable.getFormat(token.operator) == 4 ) {
 						String opcode = instTable.getOpcode(token.operator);
-						
-						if ( 'A' <= opcode.charAt(0) && opcode.charAt(0) <= 'Z' ) 
-							tmp = opcode.charAt(0) - ('0' + 7) << 4;
-						else 
-							tmp = (opcode.charAt(0) - '0') << 4;
-						
-						if ( 'A' <= opcode.charAt(1) && opcode.charAt(0) <= 'Z' ) 
-							tmp += opcode.charAt(1) - ('0' + 7);
-						else 
-							tmp += (opcode.charAt(1) - '0');
-						/** 
-						 * save opcode
-						 */
-						format = format | (tmp << 24);
+						format = format | ((calculateOpcode(opcode) << 24));
 
 						token.setFlag(TokenTable.nFlag, 1);
 						token.setFlag(TokenTable.iFlag, 1);
@@ -449,9 +392,7 @@ public class Assembler {
 								token.setFlag(TokenTable.xFlag, 1);
 						}
 						
-						/**
-						 * save nixbpe
-						 */
+						/** set nixbpe */
 						format = format | (token.nixbpe << 20);
 						
 						objectCode = Integer.toHexString(format).toUpperCase();	
@@ -574,20 +515,6 @@ public class Assembler {
 		}
 	}
 	
-	public String ConvertRegisterToNum(String register) {
-		if ( register.equals("A") ) 	  return "0";
-		else if ( register.equals("X") )  return "1";
-		else if ( register.equals("L") )  return "2";
-		else if ( register.equals("PC") ) return "8";
-		else if ( register.equals("SW") ) return "9";
-		else if ( register.equals("B") )  return "3";
-		else if ( register.equals("S") )  return "4";
-		else if ( register.equals("T") )  return "5";
-		else if ( register.equals("F") )  return "6";
-									  
-		return null;
-	}
-	
 	/**
 	 * inputFile을 읽어들여서 lineList에 저장한다.<br>
 	 * @param inputFile : input 파일 이름.
@@ -611,4 +538,55 @@ public class Assembler {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * opcode를 int형으로 변환한 값을 리턴한다.
+	 * @param opcode : int형으로 변환할 opcode
+	 * @return tmp : int형으로 변환된 opcode
+	 */
+	public int calculateOpcode (String opcode) {
+		int tmp = 0;
+		
+		if ( 'A' <= opcode.charAt(0) && opcode.charAt(0) <= 'Z' )
+			tmp = opcode.charAt(0) - ('0' + 7) << 4;
+		else 
+			tmp = (opcode.charAt(0) - '0') << 4;
+		  
+		if ( 'A' <= opcode.charAt(1) && opcode.charAt(0) <= 'Z' )
+			tmp += opcode.charAt(1) - ('0' + 7);
+		else
+			tmp += opcode.charAt(1) - '0';
+		
+		return tmp;
+	}
+	
+	/**
+	 * format 2의 레지스터 종류에 따라 해당 number 반환
+	 * @param register 
+	 * @return : 해당 레지스터 number
+	 */
+	public String ConvertRegisterToNum(String register) {
+		if ( register.equals("A") ) 	  return "0";
+		else if ( register.equals("X") )  return "1";
+		else if ( register.equals("L") )  return "2";
+		else if ( register.equals("PC") ) return "8";
+		else if ( register.equals("SW") ) return "9";
+		else if ( register.equals("B") )  return "3";
+		else if ( register.equals("S") )  return "4";
+		else if ( register.equals("T") )  return "5";
+		else if ( register.equals("F") )  return "6";
+									  
+		return null;
+	}
+	/**
+	 * 10진수를 16진수로 변환하고 그 값을 리턴한다.
+	 * @param value : 16진수로 바꾸고자 하는 10진수
+	 * @return Integer.toHexString(value).toUpperCase() : 16진수로 변경된 값
+	 */
+	public static String decToHex(int value)
+	 {
+		return Integer.toHexString(value).toUpperCase();
+	 }
 }
+
+

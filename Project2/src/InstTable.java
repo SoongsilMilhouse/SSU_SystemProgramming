@@ -46,7 +46,12 @@ public class InstTable {
 		}
 	}
 	
-	//get, set, search 등의 함수는 자유 구현
+	/**
+	 * 해당 instruction이 instMap에 있으면 리턴한다.
+	 * @param instruction : instMap에서 찾고자 하는 instruction
+	 * @return instruction : instMap에 있는 명령어
+	 * 주의 : instMap에 해당 instruction이 없으면 null을 리턴한다.
+	 */
 	public String getInstruction(String instruction) {
 		if (instruction.charAt(0) == '+') {
 			instruction = instruction.substring(1, instruction.length());
@@ -63,6 +68,12 @@ public class InstTable {
 		return null;
 	}
 	
+	/**
+	 * 해당 instruction이 instMap에 있으면 그 instruction의 format을 리턴한다.
+	 * @param instruction : instMap에서 찾고자 하는 instruction
+	 * @return format : 해당 instruction의 format
+	 * 주의 : instMap에 해당 instruction이 없으면 null을 리턴한다.
+	 */
 	public int getFormat(String instruction) {
 		Iterator<String> keys = instMap.keySet().iterator();
 		
@@ -79,6 +90,12 @@ public class InstTable {
 		return -1;
 	}
 	
+	/**
+	 * 해당 instruction이 instMap에 있으면 그 instruction의 opcode를 리턴한다.
+	 * @param instruction : instMap에서 찾고자 하는 instruction
+	 * @return opcode : 해당 instruction의 opcode
+	 * 주의 : instMap에 해당 instruction이 없으면 null을 리턴한다.
+	 */
 	public String getOpcode(String instruction) {
 		Iterator<String> keys = instMap.keySet().iterator();
 		
@@ -96,6 +113,12 @@ public class InstTable {
 		return null;
 	}
 	
+	/**
+	 * 해당 instruction이 instMap에 있으면 그 instruction의 operand의 개수를 리턴한다.
+	 * @param instruction : instMap에서 찾고자 하는 instruction
+	 * @return numberOfOperand : 해당 instruction의 numberOfOperand
+	 * 주의 : instMap에 해당 instruction이 없으면 -1을 리턴한다.
+	 */
 	public int getNumberOfOperand(String instruction) {
 		Iterator<String> keys = instMap.keySet().iterator();
 		
@@ -142,6 +165,4 @@ class Instruction {
 		}
 		
 	}
-	
-	//그 외 함수 자유 구현
 }

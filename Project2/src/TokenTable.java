@@ -51,15 +51,6 @@ public class TokenTable {
 		return tokenList.get(index);
 	}
 	
-	/**
-	 * Pass2 과정에서 사용한다.
-	 * instruction table, symbol table 등을 참조하여 objectcode를 생성하고, 이를 저장한다.
-	 * @param index
-	 */
-	public void makeObjectCode(int index){
-
-	}
-	
 	/** 
 	 * index번호에 해당하는 object code를 리턴한다.
 	 * @param index
@@ -90,7 +81,7 @@ class Token{
 	
 	/**
 	 * 클래스를 초기화 하면서 바로 line의 의미 분석을 수행한다. 
-	 * @param line 문장단위로 저장된 프로그램 코드
+	 * @param line : 문장단위로 저장된 프로그램 코드
 	 */
 	public Token(String line) {
 		//initialize 추가
@@ -99,64 +90,39 @@ class Token{
 	
 	/**
 	 * line의 실질적인 분석을 수행하는 함수. Token의 각 변수에 분석한 결과를 저장한다.
-	 * @param line 문장단위로 저장된 프로그램 코드.
+	 * @param line : 문장단위로 저장된 프로그램 코드.
 	 */
 	public void parsing(String line) {
+		/** NO label */
 		if ( line.charAt(0) == '\t' ) {
 			label = null;
 			operator = line.split("\t")[1];
 		}
+		/** YES label */
 		else {
 			label = line.split("\t")[0];
 			operator = line.split("\t")[1];
 		}
-		
+		/** NO operand & comment */
 		if (line.split("\t").length == 2) {
 			operand = null;
 			comment = null;
 		}
+		/** NO operand */
 		else if (line.split("\t", 3)[2].charAt(0) == '\t') {
 			operand = null;
 			comment = line.split("\t")[3];
 		}
+		/** NO comment */
 		else if (line.split("\t").length == 3) {
 			operand = line.split("\t")[2].split(",");
 			comment = null;
 		}
+		/** YES operand & comment */
 		else {
 			operand = line.split("\t")[2].split(",");
 			comment = line.split("\t")[3];
 		}
-		/*String[] array = null;
-		int commaCount = 0;
-		array = line.split("\t");
-		System.out.println("ARRAY[2].LEN : "  +array[2].length());
-		
-		for (int i = 0; i < array[2].length(); i++) {
-			if ( array[2].charAt(i) == ',' )
-				commaCount++;
-		}
-		
-		label = array[0];
-		operator = array[1];
-		if (array[1].equals("LTORG") == false) {
-			if ( array.length > 2
-					) {
-				operand = array[2].split(",");
-			}
-			else if (commaCount == 1) {
-				operand[0] = array[2].split(",")[0];
-				operand[1] = array[2].split(",")[1];
-					
-			}
-			else if (commaCount == 2) {
-				operand[0] = array[2].split(",")[0];
-				operand[1] = array[2].split(",")[1];
-				operand[2] = array[2].split(",")[2];
-			}
-			if (array.length == 4)
-				comment = array[3];
-		}*/
 	}
 	
 	/** 
@@ -169,6 +135,7 @@ class Token{
 	 * @param value : 집어넣고자 하는 값. 1또는 0으로 선언한다.
 	 */ 
 	public void setFlag(int flag, int value) {
+		if ( value == 1 )
 			nixbpe = (char)(nixbpe | flag);
 	}
 	

@@ -14,48 +14,48 @@ import java.util.StringTokenizer;
 
 /**
  * Assembler : 
- * ÀÌ ÇÁ·Î±×·¥Àº SIC/XE ¸Ó½ÅÀ» À§ÇÑ Assembler ÇÁ·Î±×·¥ÀÇ ¸ŞÀÎ ·çÆ¾ÀÌ´Ù.
- * ÇÁ·Î±×·¥ÀÇ ¼öÇà ÀÛ¾÷Àº ´ÙÀ½°ú °°´Ù. <br>
- * 1) Ã³À½ ½ÃÀÛÇÏ¸é Instruction ¸í¼¼¸¦ ÀĞ¾îµé¿©¼­ assembler¸¦ ¼¼ÆÃÇÑ´Ù. <br>
- * 2) »ç¿ëÀÚ°¡ ÀÛ¼ºÇÑ input ÆÄÀÏÀ» ÀĞ¾îµéÀÎ ÈÄ ÀúÀåÇÑ´Ù. <br>
- * 3) input ÆÄÀÏÀÇ ¹®ÀåµéÀ» ´Ü¾îº°·Î ºĞÇÒÇÏ°í ÀÇ¹Ì¸¦ ÆÄ¾ÇÇØ¼­ Á¤¸®ÇÑ´Ù. (pass1) <br>
- * 4) ºĞ¼®µÈ ³»¿ëÀ» ¹ÙÅÁÀ¸·Î ÄÄÇ»ÅÍ°¡ »ç¿ëÇÒ ¼ö ÀÖ´Â object code¸¦ »ı¼ºÇÑ´Ù. (pass2) <br>
+ * ì´ í”„ë¡œê·¸ë¨ì€ SIC/XE ë¨¸ì‹ ì„ ìœ„í•œ Assembler í”„ë¡œê·¸ë¨ì˜ ë©”ì¸ ë£¨í‹´ì´ë‹¤.
+ * í”„ë¡œê·¸ë¨ì˜ ìˆ˜í–‰ ì‘ì—…ì€ ë‹¤ìŒê³¼ ê°™ë‹¤. <br>
+ * 1) ì²˜ìŒ ì‹œì‘í•˜ë©´ Instruction ëª…ì„¸ë¥¼ ì½ì–´ë“¤ì—¬ì„œ assemblerë¥¼ ì„¸íŒ…í•œë‹¤. <br>
+ * 2) ì‚¬ìš©ìê°€ ì‘ì„±í•œ input íŒŒì¼ì„ ì½ì–´ë“¤ì¸ í›„ ì €ì¥í•œë‹¤. <br>
+ * 3) input íŒŒì¼ì˜ ë¬¸ì¥ë“¤ì„ ë‹¨ì–´ë³„ë¡œ ë¶„í• í•˜ê³  ì˜ë¯¸ë¥¼ íŒŒì•…í•´ì„œ ì •ë¦¬í•œë‹¤. (pass1) <br>
+ * 4) ë¶„ì„ëœ ë‚´ìš©ì„ ë°”íƒ•ìœ¼ë¡œ ì»´í“¨í„°ê°€ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” object codeë¥¼ ìƒì„±í•œë‹¤. (pass2) <br>
  * 
  * <br><br>
- * ÀÛ¼ºÁßÀÇ À¯ÀÇ»çÇ× : <br>
- *  1) »õ·Î¿î Å¬·¡½º, »õ·Î¿î º¯¼ö, »õ·Î¿î ÇÔ¼ö ¼±¾ğÀº ¾ó¸¶µçÁö Çã¿ëµÊ. ´Ü, ±âÁ¸ÀÇ º¯¼ö¿Í ÇÔ¼öµéÀ» »èÁ¦ÇÏ°Å³ª ¿ÏÀüÈ÷ ´ëÃ¼ÇÏ´Â °ÍÀº ¾ÈµÈ´Ù.<br>
- *  2) ¸¶Âù°¡Áö·Î ÀÛ¼ºµÈ ÄÚµå¸¦ »èÁ¦ÇÏÁö ¾ÊÀ¸¸é ÇÊ¿ä¿¡ µû¶ó ¿¹¿ÜÃ³¸®, ÀÎÅÍÆäÀÌ½º ¶Ç´Â »ó¼Ó »ç¿ë ¶ÇÇÑ Çã¿ëµÊ.<br>
- *  3) ¸ğµç void Å¸ÀÔÀÇ ¸®ÅÏ°ªÀº À¯ÀúÀÇ ÇÊ¿ä¿¡ µû¶ó ´Ù¸¥ ¸®ÅÏ Å¸ÀÔÀ¸·Î º¯°æ °¡´É.<br>
- *  4) ÆÄÀÏ, ¶Ç´Â ÄÜ¼ÖÃ¢¿¡ ÇÑ±ÛÀ» Ãâ·Â½ÃÅ°Áö ¸» °Í. (Ã¤Á¡»óÀÇ ÀÌÀ¯. ÁÖ¼®¿¡ Æ÷ÇÔµÈ ÇÑ±ÛÀº »ó°ü ¾øÀ½)<br>
+ * ì‘ì„±ì¤‘ì˜ ìœ ì˜ì‚¬í•­ : <br>
+ *  1) ìƒˆë¡œìš´ í´ë˜ìŠ¤, ìƒˆë¡œìš´ ë³€ìˆ˜, ìƒˆë¡œìš´ í•¨ìˆ˜ ì„ ì–¸ì€ ì–¼ë§ˆë“ ì§€ í—ˆìš©ë¨. ë‹¨, ê¸°ì¡´ì˜ ë³€ìˆ˜ì™€ í•¨ìˆ˜ë“¤ì„ ì‚­ì œí•˜ê±°ë‚˜ ì™„ì „íˆ ëŒ€ì²´í•˜ëŠ” ê²ƒì€ ì•ˆëœë‹¤.<br>
+ *  2) ë§ˆì°¬ê°€ì§€ë¡œ ì‘ì„±ëœ ì½”ë“œë¥¼ ì‚­ì œí•˜ì§€ ì•Šìœ¼ë©´ í•„ìš”ì— ë”°ë¼ ì˜ˆì™¸ì²˜ë¦¬, ì¸í„°í˜ì´ìŠ¤ ë˜ëŠ” ìƒì† ì‚¬ìš© ë˜í•œ í—ˆìš©ë¨.<br>
+ *  3) ëª¨ë“  void íƒ€ì…ì˜ ë¦¬í„´ê°’ì€ ìœ ì €ì˜ í•„ìš”ì— ë”°ë¼ ë‹¤ë¥¸ ë¦¬í„´ íƒ€ì…ìœ¼ë¡œ ë³€ê²½ ê°€ëŠ¥.<br>
+ *  4) íŒŒì¼, ë˜ëŠ” ì½˜ì†”ì°½ì— í•œê¸€ì„ ì¶œë ¥ì‹œí‚¤ì§€ ë§ ê²ƒ. (ì±„ì ìƒì˜ ì´ìœ . ì£¼ì„ì— í¬í•¨ëœ í•œê¸€ì€ ìƒê´€ ì—†ìŒ)<br>
  * 
  * <br><br>
- *  + Á¦°øÇÏ´Â ÇÁ·Î±×·¥ ±¸Á¶ÀÇ °³¼±¹æ¹ıÀ» Á¦¾ÈÇÏ°í ½ÍÀº ºĞµéÀº º¸°í¼­ÀÇ °á·Ğ µŞºÎºĞ¿¡ Ã·ºÎ ¹Ù¶ø´Ï´Ù. ³»¿ë¿¡ µû¶ó °¡»êÁ¡ÀÌ ÀÖÀ» ¼ö ÀÖ½À´Ï´Ù.
+ *  + ì œê³µí•˜ëŠ” í”„ë¡œê·¸ë¨ êµ¬ì¡°ì˜ ê°œì„ ë°©ë²•ì„ ì œì•ˆí•˜ê³  ì‹¶ì€ ë¶„ë“¤ì€ ë³´ê³ ì„œì˜ ê²°ë¡  ë’·ë¶€ë¶„ì— ì²¨ë¶€ ë°”ëë‹ˆë‹¤. ë‚´ìš©ì— ë”°ë¼ ê°€ì‚°ì ì´ ìˆì„ ìˆ˜ ìˆìŠµë‹ˆë‹¤.
  */
 public class Assembler {
-	/** instruction ¸í¼¼¸¦ ÀúÀåÇÑ °ø°£ */
+	/** instruction ëª…ì„¸ë¥¼ ì €ì¥í•œ ê³µê°„ */
 	InstTable instTable;
-	/** ÀĞ¾îµéÀÎ input ÆÄÀÏÀÇ ³»¿ëÀ» ÇÑ ÁÙ ¾¿ ÀúÀåÇÏ´Â °ø°£. */
+	/** ì½ì–´ë“¤ì¸ input íŒŒì¼ì˜ ë‚´ìš©ì„ í•œ ì¤„ ì”© ì €ì¥í•˜ëŠ” ê³µê°„. */
 	ArrayList<String> lineList;
-	/** ÇÁ·Î±×·¥ÀÇ sectionº°·Î symbol tableÀ» ÀúÀåÇÏ´Â °ø°£*/
+	/** í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ symbol tableì„ ì €ì¥í•˜ëŠ” ê³µê°„*/
 	ArrayList<SymbolTable> symtabList;
-	/** ÇÁ·Î±×·¥ÀÇ sectionº°·Î ÇÁ·Î±×·¥À» ÀúÀåÇÏ´Â °ø°£*/
+	/** í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ í”„ë¡œê·¸ë¨ì„ ì €ì¥í•˜ëŠ” ê³µê°„*/
 	ArrayList<TokenTable> TokenList;
-	/** ÇÁ·Î±×·¥ÀÇ sectionº°·Î literal tableÀ» ÀúÀåÇÏ´Â °ø°£*/
+	/** í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ literal tableì„ ì €ì¥í•˜ëŠ” ê³µê°„*/
 	ArrayList<LiteralTable> literalList;
-	/** ÇÁ·Î±×·¥ÀÇ sectionº°·Î program length¸¦ ÀúÀåÇÏ´Â °ø°£*/
+	/** í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ program lengthë¥¼ ì €ì¥í•˜ëŠ” ê³µê°„*/
 	ArrayList<Integer> progLengthList;
-	/** ÇÁ·Î±×·¥ÀÇ sectionº°·Î object programÀ» ÀúÀåÇÏ´Â °ø°£*/
+	/** í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ object programì„ ì €ì¥í•˜ëŠ” ê³µê°„*/
 	ArrayList<ObjectProgTable> ObjectProgList;
 	/** 
-	 * Token, ¶Ç´Â Áö½Ã¾î¿¡ µû¶ó ¸¸µé¾îÁø ¿ÀºêÁ§Æ® ÄÚµåµéÀ» Ãâ·Â ÇüÅÂ·Î ÀúÀåÇÏ´Â °ø°£. <br>
-	 * ÇÊ¿äÇÑ °æ¿ì String ´ë½Å º°µµÀÇ Å¬·¡½º¸¦ ¼±¾ğÇÏ¿© ArrayList¸¦ ±³Ã¼ÇØµµ ¹«¹æÇÔ.
+	 * Token, ë˜ëŠ” ì§€ì‹œì–´ì— ë”°ë¼ ë§Œë“¤ì–´ì§„ ì˜¤ë¸Œì íŠ¸ ì½”ë“œë“¤ì„ ì¶œë ¥ í˜•íƒœë¡œ ì €ì¥í•˜ëŠ” ê³µê°„. <br>
+	 * í•„ìš”í•œ ê²½ìš° String ëŒ€ì‹  ë³„ë„ì˜ í´ë˜ìŠ¤ë¥¼ ì„ ì–¸í•˜ì—¬ ArrayListë¥¼ êµì²´í•´ë„ ë¬´ë°©í•¨.
 	 */
 	ArrayList<CodeTable> codeList;
 
 	/**
-	 * Å¬·¡½º ÃÊ±âÈ­. instruction TableÀ» ÃÊ±âÈ­¿Í µ¿½Ã¿¡ ¼¼ÆÃÇÑ´Ù.
+	 * í´ë˜ìŠ¤ ì´ˆê¸°í™”. instruction Tableì„ ì´ˆê¸°í™”ì™€ ë™ì‹œì— ì„¸íŒ…í•œë‹¤.
 	 * 
-	 * @param instFile : instruction ¸í¼¼¸¦ ÀÛ¼ºÇÑ ÆÄÀÏ ÀÌ¸§. 
+	 * @param instFile : instruction ëª…ì„¸ë¥¼ ì‘ì„±í•œ íŒŒì¼ ì´ë¦„. 
 	 */
 	public Assembler(String instFile) {
 		instTable = new InstTable(instFile);
@@ -69,7 +69,7 @@ public class Assembler {
 	}
 
 	/** 
-	 * ¾î¼Àºí·¯ÀÇ ¸ŞÀÎ ·çÆ¾
+	 * ì–´ì…ˆë¸”ëŸ¬ì˜ ë©”ì¸ ë£¨í‹´
 	 */
 	public static void main(String[] args) {
 		Assembler assembler = new Assembler("inst.data");
@@ -83,8 +83,8 @@ public class Assembler {
 	}
 
 	/**
-	 * ÀÛ¼ºµÈ codeList¸¦ Ãâ·ÂÇüÅÂ¿¡ ¸Â°Ô Ãâ·ÂÇÑ´Ù.<br>
-	 * @param fileName : ÀúÀåµÇ´Â ÆÄÀÏ ÀÌ¸§
+	 * ì‘ì„±ëœ codeListë¥¼ ì¶œë ¥í˜•íƒœì— ë§ê²Œ ì¶œë ¥í•œë‹¤.<br>
+	 * @param fileName : ì €ì¥ë˜ëŠ” íŒŒì¼ ì´ë¦„
 	 */
 	private void printObjectCode(String fileName) {
 		try {
@@ -109,8 +109,8 @@ public class Assembler {
 	}
 	
 	/**
-	 * ÀÛ¼ºµÈ SymbolTableµéÀ» Ãâ·ÂÇüÅÂ¿¡ ¸Â°Ô Ãâ·ÂÇÑ´Ù.<br>
-	 * @param fileName : ÀúÀåµÇ´Â ÆÄÀÏ ÀÌ¸§
+	 * ì‘ì„±ëœ SymbolTableë“¤ì„ ì¶œë ¥í˜•íƒœì— ë§ê²Œ ì¶œë ¥í•œë‹¤.<br>
+	 * @param fileName : ì €ì¥ë˜ëŠ” íŒŒì¼ ì´ë¦„
 	 */
 	private void printSymbolTable(String fileName) {
 		try {
@@ -131,17 +131,13 @@ public class Assembler {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
-	
-	
 	/** 
-	 * pass1 °úÁ¤À» ¼öÇàÇÑ´Ù.<br>
-	 *   1) ÇÁ·Î±×·¥ ¼Ò½º¸¦ ½ºÄµÇÏ¿© ÅäÅ«´ÜÀ§·Î ºĞ¸®ÇÑ µÚ ÅäÅ«Å×ÀÌºí »ı¼º<br>
-	 *   2) labelÀ» symbolTable¿¡ Á¤¸®<br>
+	 * pass1 ê³¼ì •ì„ ìˆ˜í–‰í•œë‹¤.<br>
+	 *   1) í”„ë¡œê·¸ë¨ ì†ŒìŠ¤ë¥¼ ìŠ¤ìº”í•˜ì—¬ í† í°ë‹¨ìœ„ë¡œ ë¶„ë¦¬í•œ ë’¤ í† í°í…Œì´ë¸” ìƒì„±<br>
+	 *   2) labelì„ symbolTableì— ì •ë¦¬<br>
 	 *   <br><br>
-	 *    ÁÖÀÇ»çÇ× : SymbolTable°ú TokenTableÀº ÇÁ·Î±×·¥ÀÇ sectionº°·Î ÇÏ³ª¾¿ ¼±¾ğµÇ¾î¾ß ÇÑ´Ù.
+	 *    ì£¼ì˜ì‚¬í•­ : SymbolTableê³¼ TokenTableì€ í”„ë¡œê·¸ë¨ì˜ sectionë³„ë¡œ í•˜ë‚˜ì”© ì„ ì–¸ë˜ì–´ì•¼ í•œë‹¤.
 	 */
 	private void pass1() {
 		int section = 0;
@@ -243,8 +239,8 @@ public class Assembler {
 	}
 	
 	/**
-	 * pass2 °úÁ¤À» ¼öÇàÇÑ´Ù.<br>
-	 *   1) ºĞ¼®µÈ ³»¿ëÀ» ¹ÙÅÁÀ¸·Î object code¸¦ »ı¼ºÇÏ¿© codeList¿¡ ÀúÀå.
+	 * pass2 ê³¼ì •ì„ ìˆ˜í–‰í•œë‹¤.<br>
+	 *   1) ë¶„ì„ëœ ë‚´ìš©ì„ ë°”íƒ•ìœ¼ë¡œ object codeë¥¼ ìƒì„±í•˜ì—¬ codeListì— ì €ì¥.
 	 */
 	private void pass2() {
 		final int TEXT_MAX_LENGTH = 60;
@@ -281,9 +277,9 @@ public class Assembler {
 					}
 					else if ( token.operator.equals("WORD") ) {
 						/**
-						 * °³¼±ÀÇ ¿©Áö ÀÖÀ½
-						 * EXTREF¿¡ BUFEND, BUFFER ¼±¾ğµÇ¾î ÀÖÀ¸¸é °®´Ù¾²°í 
-						 * ¾Æ´Ï¸é 000000 À¸·Î ÃÊ±âÈ­
+						 * ê°œì„ ì˜ ì—¬ì§€ ìˆìŒ
+						 * EXTREFì— BUFEND, BUFFER ì„ ì–¸ë˜ì–´ ìˆìœ¼ë©´ ê°–ë‹¤ì“°ê³  
+						 * ì•„ë‹ˆë©´ 000000 ìœ¼ë¡œ ì´ˆê¸°í™”
 						 */
 						objectCode += "000000";
 						codeList.get(section).putOpjectCode(objectCode);
@@ -401,9 +397,9 @@ public class Assembler {
 				}
 			} /** End of for */
 			/**
-			 * ÇØ´ç sectionÀÇ literal table¿¡ ÀÖ´Â ¸®ÅÍ·²À» codeList¿¡ Ãß°¡ÇÑ´Ù.
+			 * í•´ë‹¹ sectionì˜ literal tableì— ìˆëŠ” ë¦¬í„°ëŸ´ì„ codeListì— ì¶”ê°€í•œë‹¤.
 			 * 
-			 * °³¼±ÀÇ ¿©Áö°¡ ÀÖ´Â µíÇÔ.
+			 * ê°œì„ ì˜ ì—¬ì§€ê°€ ìˆëŠ” ë“¯í•¨.
 			 */
 			if ( literalList.get(section).literalList.isEmpty() == false )
 				codeList.get(section).putOpjectCode(literalList.get(section).getLiteral(literalIndex++).value);
@@ -516,8 +512,8 @@ public class Assembler {
 	}
 	
 	/**
-	 * inputFileÀ» ÀĞ¾îµé¿©¼­ lineList¿¡ ÀúÀåÇÑ´Ù.<br>
-	 * @param inputFile : input ÆÄÀÏ ÀÌ¸§.
+	 * inputFileì„ ì½ì–´ë“¤ì—¬ì„œ lineListì— ì €ì¥í•œë‹¤.<br>
+	 * @param inputFile : input íŒŒì¼ ì´ë¦„.
 	 */
 	private void loadInputFile(String inputFile) {
 		BufferedReader in = null;
@@ -540,9 +536,9 @@ public class Assembler {
 	}
 	
 	/**
-	 * opcode¸¦ intÇüÀ¸·Î º¯È¯ÇÑ °ªÀ» ¸®ÅÏÇÑ´Ù.
-	 * @param opcode : intÇüÀ¸·Î º¯È¯ÇÒ opcode
-	 * @return tmp : intÇüÀ¸·Î º¯È¯µÈ opcode
+	 * opcodeë¥¼ intí˜•ìœ¼ë¡œ ë³€í™˜í•œ ê°’ì„ ë¦¬í„´í•œë‹¤.
+	 * @param opcode : intí˜•ìœ¼ë¡œ ë³€í™˜í•  opcode
+	 * @return tmp : intí˜•ìœ¼ë¡œ ë³€í™˜ëœ opcode
 	 */
 	public int calculateOpcode (String opcode) {
 		int tmp = 0;
@@ -561,9 +557,9 @@ public class Assembler {
 	}
 	
 	/**
-	 * format 2ÀÇ ·¹Áö½ºÅÍ Á¾·ù¿¡ µû¶ó ÇØ´ç number ¹İÈ¯
+	 * format 2ì˜ ë ˆì§€ìŠ¤í„° ì¢…ë¥˜ì— ë”°ë¼ í•´ë‹¹ number ë°˜í™˜
 	 * @param register 
-	 * @return : ÇØ´ç ·¹Áö½ºÅÍ number
+	 * @return : í•´ë‹¹ ë ˆì§€ìŠ¤í„° number
 	 */
 	public String ConvertRegisterToNum(String register) {
 		if ( register.equals("A") ) 	  return "0";
@@ -579,9 +575,9 @@ public class Assembler {
 		return null;
 	}
 	/**
-	 * 10Áø¼ö¸¦ 16Áø¼ö·Î º¯È¯ÇÏ°í ±× °ªÀ» ¸®ÅÏÇÑ´Ù.
-	 * @param value : 16Áø¼ö·Î ¹Ù²Ù°íÀÚ ÇÏ´Â 10Áø¼ö
-	 * @return Integer.toHexString(value).toUpperCase() : 16Áø¼ö·Î º¯°æµÈ °ª
+	 * 10ì§„ìˆ˜ë¥¼ 16ì§„ìˆ˜ë¡œ ë³€í™˜í•˜ê³  ê·¸ ê°’ì„ ë¦¬í„´í•œë‹¤.
+	 * @param value : 16ì§„ìˆ˜ë¡œ ë°”ê¾¸ê³ ì í•˜ëŠ” 10ì§„ìˆ˜
+	 * @return Integer.toHexString(value).toUpperCase() : 16ì§„ìˆ˜ë¡œ ë³€ê²½ëœ ê°’
 	 */
 	public static String decToHex(int value)
 	 {

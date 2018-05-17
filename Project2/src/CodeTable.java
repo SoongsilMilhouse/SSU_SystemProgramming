@@ -13,7 +13,7 @@ public class CodeTable {
 	
 	/**
 	 * codeList에 해당 section의 object code를 저장한다.
-	 * @param objectCode
+	 * @param : object code
 	 */
 	public void putOpjectCode(String objectCode) {
 		codeList.add(objectCode);
@@ -21,8 +21,8 @@ public class CodeTable {
 	
 	/**
 	 * 해당 인덱스의 object code를 리턴한다.
-	 * @param index
-	 * @return
+	 * @param : index
+	 * @return : object code
 	 */
 	public String getObjectCode(int index) {
 		return codeList.get(index);

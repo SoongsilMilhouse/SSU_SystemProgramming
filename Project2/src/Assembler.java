@@ -6,11 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.StringTokenizer;
 
 /**
  * Assembler : 
@@ -249,12 +246,11 @@ public class Assembler {
 	private void pass2() {
 		final int TEXT_MAX_LENGTH = 60;
 		int section = 0;
-		int i = 0, j = 0;
+		int i = 0;
 		int literalIndex = 0;
 		int format = 0;
 		int ta = 0;
 		int pc = 0;
-		int tmp = 0;
 		String objectCode;
 		
 		Iterator<TokenTable> itr = TokenList.iterator();
@@ -266,7 +262,6 @@ public class Assembler {
 			for (Token token : tokentable.tokenList) {
 				ta = 0;
 				pc = 0;
-				tmp = 0;
 				objectCode = "";
 				format = 0;
 				
@@ -280,11 +275,6 @@ public class Assembler {
 						
 					}
 					else if ( token.operator.equals("WORD") ) {
-						/**
-						 * 개선의 여지 있음
-						 * EXTREF에 BUFEND, BUFFER 선언되어 있으면 갖다쓰고 
-						 * 아니면 000000 으로 초기화
-						 */
 						objectCode += "000000";
 						codeList.get(section).putOpjectCode(objectCode);
 					}
@@ -378,6 +368,7 @@ public class Assembler {
 						
 						codeList.get(section).putOpjectCode(objectCode);
 					}
+					/** format 4 */
 					else if ( instTable.getFormat(token.operator) == 4 ) {
 						String opcode = instTable.getOpcode(token.operator);
 						format = format | ((calculateOpcode(opcode) << 24));
@@ -402,8 +393,6 @@ public class Assembler {
 			} /** End of for */
 			/**
 			 * 해당 section의 literal table에 있는 리터럴을 codeList에 추가한다.
-			 * 
-			 * 개선의 여지가 있는 듯함.
 			 */
 			if ( literalList.get(section).literalList.isEmpty() == false )
 				codeList.get(section).putOpjectCode(literalList.get(section).getLiteral(literalIndex++).value);
